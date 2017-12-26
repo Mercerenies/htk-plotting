@@ -15,17 +15,17 @@ clickEvent entry cnvs = do
 
 main :: IO ()
 main = do
-  mainwin <- initHTk []
-  cnvs <- newCanvas mainwin [background "white"]
+  mainwin <- initHTk [minSize (cm 15, cm 15), maxSize (cm 15, cm 15)]
+  cnvs <- newCanvas mainwin [background "white", size (cm 15, cm 15)]
   frame <- newFrame mainwin []
   entry <- newEntry frame []
   btn <- newButton frame [text "Plot"]
   click <- clicked btn
   (ret, _) <- bindSimple entry (KeyRelease $ Just (KeySym "Return"))
   _ <- spawnEvent $ forever (click >>> clickEvent entry cnvs +> ret >>> clickEvent entry cnvs)
-  pack cnvs [Fill Both, Side AtTop, Expand On]
   pack frame [Fill X, Side AtBottom]
   pack entry [Fill X, Side AtLeft, Expand On]
   pack btn [Fill None, Side AtRight]
+  pack cnvs [Fill Both, Side AtTop, Expand On]
   forceFocus entry
   finishHTk
